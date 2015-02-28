@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Linear offset to LoROM address conversion</title>
+  
+  <script>
+    function toLorom(str) {
+	if (str.length==0) {
+	  document.getElementById("address").innerHTML="";
+	  return;
+	} else {
+	  var x = parseInt(str,16);
+	  var bsize = 32768;
+	  var bnum = 128;
+	  while ( x >= bsize ) {
+	    x -= bsize;
+		bnum++;
+	  }
+	  var a = bsize + x; 
+	  var  bank = "$" + bnum.toString(16) + ":";
+	  var addr = a.toString(16);
+	  var lorom = bank + addr;
+	  document.getElementById("address").innerHTML = lorom;
+	  return;
+	}
+	}
+	function toLinear(str1, str2) {
+	if (str1.length==0 || str2.length==0) {
+	  document.getElementById("offset").innerHTML="";
+	  return;
+	} else {
+	  var bank = parseInt(str1,16);
+	  var addr = parseInt(str2,16);
+	  var bsize = 32768;
+	  var bnum = 128;
+	  var lind = (bank - bnum)*bsize + (addr - bsize);
+	  var linh = lind.toString(16);
+	  document.getElementById("offset").innerHTML = linh;
+	  return;
+	}
+	}
+	function clear1() { 
+	  document.getElementById("given").value = ""; 
+	  document.getElementById("address").innerHTML = ""; 
+	  return; 
+	}
+	function clear2() { 
+	  document.getElementById("bankin").value = ""; 
+	  document.getElementById("addin").value = ""; 
+	  document.getElementById("offset").innerHTML = ""; 
+	  return; 
+	}
+  </script>
+</head>
+
+<body>
+  
+  <p> 
+  Enter linear offset: 0x<input type="text" id="given"/> 
+  <button onclick='toLorom(getElementById("given").value)'>LoROM</button> 
+  <span id="address"></span> 
+  <br>
+  <button onclick='clear1()'>Clear</button>
+  </p>
+  
+  <br>
+  
+  <p>
+  Enter lorom address $<input type="text" id="bankin" size="2"/>:<input type="text" id="addin" size="4"/>
+  <button onclick='toLinear(getElementById("bankin").value, getElementById("addin").value)'>Linear</button> 
+  <span id="offset"></span>
+  <br>
+  <button onclick='clear2()'>Clear</button>
+  </p>
+
+</body>
+
+</html>
